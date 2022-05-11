@@ -14,7 +14,7 @@ contract TestBasicNFT {
     }
 
     function testNameAndSymbolSetCorrectlyInConstructor() public {
-        Assert.equal(basicNFT.name(), "My Test NFT");
-        Assert.equal(basicNFT.symbol(), "MTNFT");
+        Assert.equal(basicNFT.name(), "My Test NFT", "name doesn't match");
+        Assert.equal(basicNFT.symbol(), "MTNFT", "symbol doesn't match");
     }
 }

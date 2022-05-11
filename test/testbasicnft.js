@@ -1,6 +1,8 @@
 const BasicNFT = artifacts.require("BasicNFT");
 
 contract("BasicNFT", async (accounts) => {
+    const roleAdmin = '0x0000000000000000000000000000000000000000000000000000000000000000';
+    const roleMinter = '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6';
     let instance;
 
     beforeEach(async () => {
@@ -36,5 +38,61 @@ contract("BasicNFT", async (accounts) => {
         } catch (e) {
             assert.include(e.message, "is missing role");
         }
+    });
+
+    it("should return owner address", async () => {
+        await instance.mintWithTokenURI(accounts[1], "ipfs://mysuperhash/0", { from: accounts[0] });
+
+        const owner = await instance.ownerOf.call(0);
+        assert.equal(accounts[1], owner);
+    });
+
+    it("should grant minter role to address", async () => {
+        const hasRoleInitially = await instance.hasRole(roleMinter, accounts[1]);
+        assert.equal(false, hasRoleInitially);
+
+        await instance.addMinter(accounts[1], { from: accounts[0] });
+
+        const hasRoleAfter = await instance.hasRole(roleMinter, accounts[1]);
+        assert.equal(true, hasRoleAfter);
+    });
+
+    it("should fail because account cannot give minter role", async () => {
+        try {
+            await instance.addMinter(accounts[1], { from: accounts[1] });
+        } catch (e) {
+            assert.include(e.message, "is missing role");
+        }
+    });
+
+    it("should renounce minter role by address[0]", async () => {
+        const hasRoleInitially = await instance.hasRole(roleMinter, accounts[0]);
+        assert.equal(true, hasRoleInitially);
+
+        await instance.renounceMinter({ from: accounts[0] });
+
+        const hasRoleAfter = await instance.hasRole(roleMinter, accounts[0]);
+        assert.equal(false, hasRoleAfter);
+    });
+
+    it("should throw exception because token doesn't exist", async () => {
+        try {
+            await instance.ownerOf(1000);
+        } catch (e) {
+            assert.include(e.message, "ERC721: owner query for nonexistent token");
+        }
+    });
+
+    it("should approve contract to other address", async () => {
+        const approvedAddress = await instance.getApproved(0);
+        
+        if (approvedAddress !== '0x0000000000000000000000000000000000000000') {
+            assert.fail("initial address is not zero address");
+        }
+
+        await instance.approve(accounts[2], 0, { from: accounts[1] });
+
+        const approved = await instance.getApproved(0);
+        assert.equal(accounts[2], approved);
     });
 });
