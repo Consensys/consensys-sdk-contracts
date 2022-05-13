@@ -34,6 +34,14 @@ contract("BasicNFT", async (accounts) => {
         assert.equal(tokenURIToStore, tokenURI);
     });
 
+    it("should not let you mint with empty metadataURI", async () => {
+        try {
+            await instance.mintWithTokenURI(accounts[1], "", { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "ContractURI cannot be empty");
+        }
+    });
+
     it("should fail because account is not allowed to mint", async () => {
         try {
             await instance.mintWithTokenURI(accounts[1], "ipfs://mysuperhash/0", { from: accounts[1] });
@@ -53,7 +61,7 @@ contract("BasicNFT", async (accounts) => {
         const hasRoleInitially = await instance.hasRole(roleMinter, accounts[1]);
         assert.equal(false, hasRoleInitially);
 
-        await instance.addMinter(accounts[1], { from: accounts[0] });
+        await instance.grantRole(roleMinter, accounts[1], { from: accounts[0] });
 
         const hasRoleAfter = await instance.hasRole(roleMinter, accounts[1]);
         assert.equal(true, hasRoleAfter);
@@ -61,19 +69,19 @@ contract("BasicNFT", async (accounts) => {
 
     it("should fail because account cannot give minter role", async () => {
         try {
-            await instance.addMinter(accounts[1], { from: accounts[1] });
+            await instance.grantRole(roleMinter, accounts[1], { from: accounts[1] });
         } catch (e) {
             assert.include(e.message, "is missing role");
         }
     });
 
-    it("should renounce minter role by address[0]", async () => {
-        const hasRoleInitially = await instance.hasRole(roleMinter, accounts[0]);
+    it("should renounce minter role by address[1]", async () => {
+        const hasRoleInitially = await instance.hasRole(roleMinter, accounts[1]);
         assert.equal(true, hasRoleInitially);
 
-        await instance.renounceMinter({ from: accounts[0] });
+        await instance.renounceRole(roleMinter, accounts[1], { from: accounts[1] });
 
-        const hasRoleAfter = await instance.hasRole(roleMinter, accounts[0]);
+        const hasRoleAfter = await instance.hasRole(roleMinter, accounts[1]);
         assert.equal(false, hasRoleAfter);
     });
 
@@ -81,7 +89,7 @@ contract("BasicNFT", async (accounts) => {
         const hasRoleInitially = await instance.hasRole(roleBurner, accounts[1]);
         assert.equal(false, hasRoleInitially);
 
-        await instance.addBurner(accounts[1], { from: accounts[0] });
+        await instance.grantRole(roleBurner, accounts[1], { from: accounts[0] });
 
         const hasRoleAfter = await instance.hasRole(roleBurner, accounts[1]);
         assert.equal(true, hasRoleAfter);
@@ -89,19 +97,19 @@ contract("BasicNFT", async (accounts) => {
 
     it("should fail because account cannot give burner role", async () => {
         try {
-            await instance.addBurner(accounts[1], { from: accounts[1] });
+            await instance.grantRole(roleBurner, accounts[1], { from: accounts[1] });
         } catch (e) {
             assert.include(e.message, "is missing role");
         }
     });
 
     it("should renounce burner role by address[0]", async () => {
-        const hasRoleInitially = await instance.hasRole(roleBurner, accounts[0]);
+        const hasRoleInitially = await instance.hasRole(roleBurner, accounts[1]);
         assert.equal(true, hasRoleInitially);
 
-        await instance.renounceBurner({ from: accounts[0] });
+        await instance.renounceRole(roleBurner, accounts[1], { from: accounts[1] });
 
-        const hasRoleAfter = await instance.hasRole(roleBurner, accounts[0]);
+        const hasRoleAfter = await instance.hasRole(roleBurner, accounts[1]);
         assert.equal(false, hasRoleAfter);
     });
 
@@ -109,7 +117,7 @@ contract("BasicNFT", async (accounts) => {
         const hasRoleInitially = await instance.hasRole(rolePauser, accounts[1]);
         assert.equal(false, hasRoleInitially);
 
-        await instance.addPauser(accounts[1], { from: accounts[0] });
+        await instance.grantRole(rolePauser, accounts[1], { from: accounts[0] });
 
         const hasRoleAfter = await instance.hasRole(rolePauser, accounts[1]);
         assert.equal(true, hasRoleAfter);
@@ -117,19 +125,19 @@ contract("BasicNFT", async (accounts) => {
 
     it("should fail because account cannot give pauser role", async () => {
         try {
-            await instance.addPauser(accounts[1], { from: accounts[1] });
+            await instance.grantRole(rolePauser, accounts[1], { from: accounts[1] });
         } catch (e) {
             assert.include(e.message, "is missing role");
         }
     });
 
-    it("should renounce pauser role by address[0]", async () => {
-        const hasRoleInitially = await instance.hasRole(rolePauser, accounts[0]);
+    it("should renounce pauser role by address[1]", async () => {
+        const hasRoleInitially = await instance.hasRole(rolePauser, accounts[1]);
         assert.equal(true, hasRoleInitially);
 
-        await instance.renouncePauser({ from: accounts[0] });
+        await instance.renounceRole(rolePauser, accounts[1], { from: accounts[1] });
 
-        const hasRoleAfter = await instance.hasRole(rolePauser, accounts[0]);
+        const hasRoleAfter = await instance.hasRole(rolePauser, accounts[1]);
         assert.equal(false, hasRoleAfter);
     });
 
@@ -152,5 +160,108 @@ contract("BasicNFT", async (accounts) => {
 
         const approved = await instance.getApproved(0);
         assert.equal(accounts[2], approved);
+    });
+
+    it("should return false as contract is not yet paused", async () => {
+        const isPaused = await instance.paused();
+        assert.equal(false, isPaused);
+    });
+
+    it("should get the current contractURI", async () => {
+        const uri = await instance.contractURI();
+        assert.equal("", uri);
+    });
+
+    it("should set the current contractURI to something else", async () => {
+        const newContractURI = "mymetadata.com";
+        await instance.setContractURI(newContractURI, { from: accounts[0] });
+        const uri = await instance.contractURI();
+        assert.equal(newContractURI, uri);
+    });
+
+    it("should not let you setContractURI to empty string", async () => {
+        try {
+            await instance.setContractURI("", { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "ContractURI cannot be empty");
+        }
+    });
+
+    it("should burn existing token", async () => {
+        await instance.mintWithTokenURI(accounts[1], "supertoken1.com", { from: accounts[0] });
+        await instance.burn(1, { from: accounts[0] });
+        try {
+            await instance.ownerOf(1);
+        } catch (e) {
+            assert.include(e.message, "ERC721: owner query for nonexistent token");
+        }
+    });
+
+    // After contract is paused
+
+    it("should return true as contract is paused", async () => {
+        const isPaused = await instance.paused();
+        assert.equal(false, isPaused);
+
+        await instance.pause({ from: accounts[0] });
+        const isPausedAfter = await instance.paused();
+        assert.equal(true, isPausedAfter);
+    });
+
+    it("should not allow to mint because contract is paused", async () => {
+        try {
+            const tokenURIToStore = "ipfs://mysuperhash/0";
+            await instance.mintWithTokenURI(accounts[1], tokenURIToStore, { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
+    });
+
+    it("should not allow to burn because contract is paused", async () => {
+        try {
+            await instance.burn(0, { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
+    });
+
+    it("should not allow to approve because contract is paused", async () => {
+        try {
+            await instance.approve(accounts[0], 0, { from: accounts[1] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
+    });
+
+    it("should not allow to setApprovalForAll because contract is paused", async () => {
+        try {
+            await instance.setApprovalForAll(accounts[1], true, { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
+    });
+
+    it("should not allow to grantRole because contract is paused", async () => {
+        try {
+            await instance.grantRole(roleMinter, accounts[1], { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
+    });
+
+    it("should not allow to revokeRole because contract is paused", async () => {
+        try {
+            await instance.revokeRole(roleMinter, accounts[1], { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
+    });
+
+    it("should not allow to renounceRole because contract is paused", async () => {
+        try {
+            await instance.renounceRole(roleMinter, accounts[0], { from: accounts[0] });
+        } catch (e) {
+            assert.include(e.message, "Pausable: paused");
+        }
     });
 });

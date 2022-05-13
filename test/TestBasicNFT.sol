@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.1;
+pragma solidity 0.8.13;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
