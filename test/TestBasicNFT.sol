@@ -4,13 +4,13 @@ pragma solidity 0.8.13;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/BasicNFT.sol";
+import "../contracts/NFT.sol";
 
 contract TestBasicNFT {
-    BasicNFT public basicNFT;
+    NFT public basicNFT;
 
     function beforeEach() public {
-        basicNFT = BasicNFT(DeployedAddresses.BasicNFT());
+        basicNFT = NFT(DeployedAddresses.NFT());
     }
 
     function testNameAndSymbolSetCorrectlyInConstructor() public {

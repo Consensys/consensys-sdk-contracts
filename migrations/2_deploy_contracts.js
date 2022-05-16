@@ -1,5 +1,5 @@
-var BasicNFT = artifacts.require("./BasicNFT.sol");
+var NFT = artifacts.require("NFT");
 
 module.exports = function(deployer) {
-  deployer.deploy(BasicNFT, "My Test NFT", "MTNFT");
+  deployer.deploy(NFT, "My Test NFT", "MTNFT");
 };
