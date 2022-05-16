@@ -26,7 +26,7 @@ contract NFT is ERC721URIStorage, AccessControl, Ownable {
     /// @notice NFT minting with metadata i.e tokenURI
     /// @notice Each mint will increment the tokenId, starting from 0
     function mintWithTokenURI(address to_, string memory tokenURI_) public onlyRole(MINTER_ROLE) returns (bool) {
-        require(bytes(tokenURI_).length > 1, "MetadataURI cannot be empty");
+        require(bytes(tokenURI_).length > 1, "TokenURI cannot be empty");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to_, tokenId);
