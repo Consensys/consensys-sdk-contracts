@@ -123,23 +123,4 @@ contract("NFT", async (accounts) => {
             assert.include(e.message, "ContractURI cannot be empty");
         }
     });
-
-    it("should not allow to burn existing token as sender is not owner of token", async () => {
-        await instance.mintWithTokenURI(accounts[1], "supertoken1.com", { from: accounts[0] });
-        try {
-            await instance.burn(2, { from: accounts[0] });
-        } catch (e) {
-            assert.include(e.message, "Only owner of token is allowed to burn");
-        }
-    });
-
-    it("should burn existing token", async () => {
-        await instance.mintWithTokenURI(accounts[1], "supertoken1.com", { from: accounts[0] });
-        await instance.burn(0, { from: accounts[1] });
-        try {
-            await instance.ownerOf(1);
-        } catch (e) {
-            assert.include(e.message, "ERC721: owner query for nonexistent token");
-        }
-    });
 });
