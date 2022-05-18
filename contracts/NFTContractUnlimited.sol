@@ -13,7 +13,7 @@ error TokenURIIsEmpty();
 /// ContractURI cannot be empty;
 error ContractURIIsEmpty();
 
-contract NFT is ERC721URIStorage, AccessControl, Ownable {
+contract NFTContractUnlimited is ERC721URIStorage, AccessControl, Ownable {
     using Counters for Counters.Counter;
     /// @dev Counter auto-incrementating NFT tokenIds, default: 0
     Counters.Counter private _tokenIdCounter;

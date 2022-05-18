@@ -1,12 +1,12 @@
-const NFT = artifacts.require("NFT");
+const NFTContractUnlimited = artifacts.require("NFTContractUnlimited");
 
-contract("NFT", async (accounts) => {
+contract("NFTContractUnlimited", async (accounts) => {
     const roleAdmin = '0x0000000000000000000000000000000000000000000000000000000000000000';
     const roleMinter = '0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6';
     let instance;
 
     beforeEach(async () => {
-        instance = await NFT.deployed();
+        instance = await NFTContractUnlimited.deployed();
     });
 
     it("should have owner be the deployer of the contract", async () => {

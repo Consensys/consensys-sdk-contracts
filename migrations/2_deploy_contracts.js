@@ -1,5 +1,5 @@
-var NFT = artifacts.require("NFT");
+var NFTContractUnlimited = artifacts.require("NFTContractUnlimited");
 
 module.exports = function(deployer) {
-  deployer.deploy(NFT, "My Test NFT", "MTNFT", "");
+  deployer.deploy(NFTContractUnlimited, "My Test NFT", "MTNFT", "");
 };
