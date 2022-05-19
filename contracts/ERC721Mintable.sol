@@ -4,6 +4,7 @@ pragma solidity 0.8.13;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/common/ERC2981.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 /// Name of contract cannot be empty.
@@ -13,7 +14,7 @@ error TokenURIIsEmpty();
 /// ContractURI cannot be empty;
 error ContractURIIsEmpty();
 
-contract NFTContractUnlimited is ERC721URIStorage, AccessControl, Ownable {
+contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
     using Counters for Counters.Counter;
     /// @dev Counter auto-incrementating NFT tokenIds, default: 0
     Counters.Counter private _tokenIdCounter;
@@ -49,6 +50,10 @@ contract NFTContractUnlimited is ERC721URIStorage, AccessControl, Ownable {
         return true;
     }
 
+    function setRoyalties(address receiver_, uint96 feeNumerator_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        _setDefaultRoyalty(receiver_, feeNumerator_);
+    }
+
     function contractURI() public view returns (string memory) {
         return _contractURI;
     }
@@ -62,7 +67,7 @@ contract NFTContractUnlimited is ERC721URIStorage, AccessControl, Ownable {
 
     // Overrides
 
-    function supportsInterface(bytes4 interfaceId_) public view override(ERC721, AccessControl) returns (bool) {
+    function supportsInterface(bytes4 interfaceId_) public view override(ERC721, ERC2981, AccessControl) returns (bool) {
         return super.supportsInterface(interfaceId_);
     }
 }
