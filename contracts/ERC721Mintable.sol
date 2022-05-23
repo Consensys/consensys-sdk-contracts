@@ -24,22 +24,30 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
 
     event ContractDeployed(address contractAddress_);
 
-    /// @notice The account deploying the contract will have the minter role and will be able to grand other accounts
-    /// @notice The contract is built with only a name & a symbol as metadata. Each NFT metadata will be given at mint time
-    constructor(string memory name_, string memory symbol_, string memory contractURI_) ERC721(name_, symbol_) {
+    /// @notice The account deploying the contract will have the minter role and will be able to grand other accounts.
+    /// @notice The contract is built with only a name & a symbol as metadata. Each NFT metadata will be given at mint time.
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        string memory contractURI_
+    ) ERC721(name_, symbol_) {
         if (!(bytes(name_).length > 1)) {
             revert NameIsEmpty();
         }
         _contractURI = contractURI_;
         _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _grantRole(MINTER_ROLE, _msgSender());
-        
+
         emit ContractDeployed(address(this));
     }
 
     /// @notice NFT minting with metadata i.e tokenURI
     /// @notice Each mint will increment the tokenId, starting from 0
-    function mintWithTokenURI(address to_, string memory tokenURI_) public onlyRole(MINTER_ROLE) returns (bool) {
+    function mintWithTokenURI(address to_, string memory tokenURI_)
+        public
+        onlyRole(MINTER_ROLE)
+        returns (bool)
+    {
         if (!(bytes(tokenURI_).length > 1)) {
             revert TokenURIIsEmpty();
         }
@@ -50,7 +58,10 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
         return true;
     }
 
-    function setRoyalties(address receiver_, uint96 feeNumerator_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setRoyalties(address receiver_, uint96 feeNumerator_)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
         _setDefaultRoyalty(receiver_, feeNumerator_);
     }
 
@@ -58,7 +69,10 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
         return _contractURI;
     }
 
-    function setContractURI(string memory contractURI_) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setContractURI(string memory contractURI_)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
         if (!(bytes(contractURI_).length > 1)) {
             revert ContractURIIsEmpty();
         }
@@ -67,7 +81,12 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
 
     // Overrides
 
-    function supportsInterface(bytes4 interfaceId_) public view override(ERC721, ERC2981, AccessControl) returns (bool) {
+    function supportsInterface(bytes4 interfaceId_)
+        public
+        view
+        override(ERC721, ERC2981, AccessControl)
+        returns (bool)
+    {
         return super.supportsInterface(interfaceId_);
     }
 }
