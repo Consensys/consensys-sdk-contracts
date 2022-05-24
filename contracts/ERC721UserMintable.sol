@@ -16,7 +16,7 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     using Address for address;
     using Counters for Counters.Counter;
     /// @dev Counter auto-incrementating NFT tokenIds, default: 0
-    Counters.Counter private _tokenIdsCounter;
+    Counters.Counter private _tokenIdCounter;
 
     uint256 private _maxSupply;
     string private _baseURI;
@@ -55,9 +55,9 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     }
 
     function reveal(string memory baseURI_) external onlyOwner {
-        require(!isRevealed, "URI has already been revealed");
+        require(!_isRevealed, "URI has already been revealed");
         _baseURI = baseURI_;
-        isRevealed = true;
+        _isRevealed = true;
     }
 
     function toggleSale() external onlyOwner {
@@ -65,7 +65,7 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     }
 
     function setBaseURI(string memory baseURI_) external onlyOwner {
-        if (!(bytes(tokenURI_).length > 1)) {
+        if (!(bytes(baseURI_).length > 1)) {
             revert BaseURIIsEmpty();
         }
         _baseURI = baseURI_;
@@ -83,10 +83,20 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     }
 
     function withdraw() public onlyOwner {
-        Address.sendValue(payable(_msgSender()), address(this).balance);
+        uint256 balance = address(this).balance;
+        Address.sendValue(payable(_msgSender()), balance);
     }
 
-    function _baseURI() internal view override returns (string memory) {
+    function _baseURI() internal view overrides returns (string memory) {
         return _baseURI;
+    }
+
+    function supportsInterface(bytes4 interfaceId_)
+        public
+        view
+        override(ERC721, ERC2981)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId_);
     }
 }
