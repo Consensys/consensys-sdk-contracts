@@ -19,10 +19,10 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     Counters.Counter private _tokenIdCounter;
 
     uint256 private _maxSupply;
-    string private _baseURI;
+    string private _tokenBaseURI;
     uint256 private _price;
     bool private _isRevealed;
-    bool private _saleStatus;
+    bool private _saleIsActive;
 
     event ContractDeployed(address contractAddress_);
 
@@ -36,7 +36,7 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
         if (!(bytes(name_).length > 1)) {
             revert NameIsEmpty();
         }
-        _baseURI = baseURI_;
+        _tokenBaseURI = baseURI_;
         _maxSupply = maxSupply_;
         _price = price_;
 
@@ -44,9 +44,9 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     }
 
     function mint() public payable {
-        require(_saleStatus, "Mint is not open at this time.");
+        require(_saleIsActive, "Mint is not active at this time.");
         require(
-            msg.value > _price,
+            msg.value >= _price,
             "Need to send at least amount of mint price"
         );
         uint256 tokenId = _tokenIdCounter.current();
@@ -56,19 +56,19 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
 
     function reveal(string memory baseURI_) external onlyOwner {
         require(!_isRevealed, "URI has already been revealed");
-        _baseURI = baseURI_;
+        _tokenBaseURI = baseURI_;
         _isRevealed = true;
     }
 
     function toggleSale() external onlyOwner {
-        _saleStatus = !_saleStatus;
+        _saleIsActive = !_saleIsActive;
     }
 
     function setBaseURI(string memory baseURI_) external onlyOwner {
         if (!(bytes(baseURI_).length > 1)) {
             revert BaseURIIsEmpty();
         }
-        _baseURI = baseURI_;
+        _tokenBaseURI = baseURI_;
     }
 
     function setPrice(uint256 price_) external onlyOwner {
@@ -87,8 +87,8 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
         Address.sendValue(payable(_msgSender()), balance);
     }
 
-    function _baseURI() internal view overrides returns (string memory) {
-        return _baseURI;
+    function _baseURI() internal view override(ERC721) returns (string memory) {
+        return _tokenBaseURI;
     }
 
     function supportsInterface(bytes4 interfaceId_)
