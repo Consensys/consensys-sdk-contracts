@@ -59,7 +59,7 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
         return true;
     }
 
-    /// let receiver, fee, _ := royaltyInfo(0, 10000) in receiver == receiver__;
+    ///#if_succeeds let receiver, _ := royaltyInfo(0, 10000) in receiver == receiver_;
     function setRoyalties(address receiver_, uint96 feeNumerator_)
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
