@@ -54,7 +54,7 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
         }
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to_, tokenId);
+        _mint(to_, tokenId);
         _setTokenURI(tokenId, tokenURI_);
         return true;
     }
