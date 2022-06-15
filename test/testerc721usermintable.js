@@ -145,19 +145,6 @@ contract("ERC721UserMintable", async (accounts) => {
         assert.equal("", uri);
     });
 
-    it("should set the current contractURI to something else", async () => {
-        const newContractURI = "mymetadata.com";
-        await instance.setContractURI(newContractURI, { from: accounts[0] });
-        const uri = await instance.contractURI();
-        assert.equal(newContractURI, uri);
-    });
-
-    it("should revert when setting contract URI to empty string", async function () {
-        await expectRevert.unspecified(
-            instance.setContractURI("", { from: accounts[0] })
-        );
-    });
-
     // SafeTransfer
 
     it("should let you safe transfer to new owner", async () => {

@@ -11,8 +11,6 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 error NameIsEmpty();
 /// Base URI of tokens to be minted cannot be empty.
 error BaseURIIsEmpty();
-/// ContractURI cannot be empty;
-error ContractURIIsEmpty();
 /// Too many tokens requested: `quantity` requested but maximum allowed is `maxTokenPurchase`.
 /// @param quantity requested amount.
 /// @param maxTokenPurchase maximum amount available per transaction.
@@ -40,7 +38,6 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
     uint256 private _maxSupply;
     uint256 private _price;
     string private _tokenBaseURI;
-    string private _contractURI;
 
     event ContractDeployed(address contractAddress_);
 
@@ -49,8 +46,7 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
         string memory symbol_,
         string memory baseURI_,
         uint256 maxSupply_,
-        uint256 price_,
-        string memory contractURI_
+        uint256 price_
     ) ERC721(name_, symbol_) {
         if (!(bytes(name_).length > 1)) {
             revert NameIsEmpty();
@@ -58,7 +54,6 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
         _tokenBaseURI = baseURI_;
         _maxSupply = maxSupply_;
         _price = price_;
-        _contractURI = contractURI_;
 
         emit ContractDeployed(address(this));
     }
@@ -77,10 +72,10 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
             });
         }
 
-        for (uint8 i = 0; i < quantity_; i++) {
+        for (uint256 i = 0; i < quantity_; i++) {
             uint256 tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
-            _safeMint(_msgSender(), tokenId);
+            _mint(_msgSender(), tokenId);
         }
     }
 
@@ -109,12 +104,12 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
         for (uint8 i = 0; i < quantity_; i++) {
             uint256 tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
-            _safeMint(_msgSender(), tokenId);
+            _mint(_msgSender(), tokenId);
         }
     }
 
     function contractURI() public view returns (string memory) {
-        return _contractURI;
+        return _tokenBaseURI;
     }
 
     function maxSupply() public view returns (uint256) {
@@ -135,19 +130,12 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
         _isRevealed = true;
     }
 
+    ///#if_succeeds (keccak256(abi.encodePacked((_tokenBaseURI))) == keccak256(abi.encodePacked((baseURI_))));
     function setBaseURI(string memory baseURI_) external onlyOwner {
         if (!(bytes(baseURI_).length > 1)) {
             revert BaseURIIsEmpty();
         }
         _tokenBaseURI = baseURI_;
-    }
-
-    ///#if_succeeds (keccak256(abi.encodePacked((_contractURI))) == keccak256(abi.encodePacked((contractURI_))));
-    function setContractURI(string memory contractURI_) public onlyOwner {
-        if (!(bytes(contractURI_).length > 1)) {
-            revert ContractURIIsEmpty();
-        }
-        _contractURI = contractURI_;
     }
 
     function setPrice(uint256 price_) external onlyOwner {
