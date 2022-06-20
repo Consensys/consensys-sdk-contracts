@@ -104,7 +104,7 @@ module.exports = {
   // $ truffle migrate --reset --compile-all
   //
   db: {
-    enabled: false,
+    enabled: true,
     host: "127.0.0.1",
     adapter: {
       name: "sqlite",

@@ -95,13 +95,13 @@ contract ERC721UserMintable is ERC721, ERC2981, Ownable {
                 maxSupply: maxSupply()
             });
         }
-        if (price() * quantity_ >= msg.value) {
+        if (msg.value < price() * quantity_) {
             revert InsufficientFunds({
                 sent: msg.value,
                 required: price() * quantity_
             });
         }
-        for (uint8 i = 0; i < quantity_; i++) {
+        for (uint256 i = 0; i < quantity_; i++) {
             uint256 tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
             _mint(_msgSender(), tokenId);
