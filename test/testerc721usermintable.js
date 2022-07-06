@@ -65,36 +65,26 @@ contract("ERC721UserMintable", async (accounts) => {
         });
     });
 
-    // it("should mint a new token", async () => {
-    //     const tokenURIToStore = "ipfs://mysuperhash/0";
-    //     const receipt = await instance.mintWithTokenURI(accounts[1], tokenURIToStore, { from: accounts[0] });
+    it("should toggle sale", async () => {
+        const isActive = await instance.isSaleActive();
+        assert.equal(false, isActive);
+        await instance.toggleSale();
+        const isActiveAfter = await instance.isSaleActive();
+        assert.equal(true, isActiveAfter);
+      });
 
-    //     const balanceOfAccount1 = await instance.balanceOf.call(accounts[1]);
-    //     assert.equal(1, balanceOfAccount1.toString());
+    it("should mint a new token", async () => {
+        const receipt = await instance.mint(1, { value: 10000000000, from: accounts[0] });
+        const balance = await instance.balanceOf(accounts[0]);
+    
+        assert.equal(2, balance);
 
-    //     const tokenURI = await instance.tokenURI.call(0);
-    //     assert.equal(tokenURIToStore, tokenURI);
-
-    //     expectEvent(receipt, 'Transfer', {
-    //         from: constants.ZERO_ADDRESS,
-    //         to: accounts[1],
-    //         tokenId: new BN(0),
-    //     });
-    // });
-
-    // it("should not let you mint with empty tokenURI", async () => {
-    //     await expectRevert.unspecified(
-    //         instance.mintWithTokenURI(accounts[1], "", { from: accounts[0] })
-    //     );
-    // });
-
-    // it("should fail because account is not allowed to mint", async () => {
-    //     try {
-    //         await instance.mintWithTokenURI(accounts[1], "ipfs://mysuperhash/0", { from: accounts[1] });
-    //     } catch (e) {
-    //         assert.include(e.message, "is missing role");
-    //     }
-    // });
+        expectEvent(receipt, 'Transfer', {
+            from: constants.ZERO_ADDRESS,
+            to: accounts[0],
+            tokenId: new BN(1),
+        });
+      });
 
     it("should return owner address", async () => {
         const owner = await instance.ownerOf.call(0);
