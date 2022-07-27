@@ -25,14 +25,18 @@ error MaxSupplyExceeded(uint256 quantity, uint256 maxSupply);
 /// @param sent total ether sent with transaction.
 /// @param required total ether required to purchase.
 error InsufficientFunds(uint256 sent, uint256 required);
-/// Sale is not active at this time.
-error InactiveSale();
-/// Max supply is less than max 
+/// Max supply is less than max
 /// @param maxSupply maximum number of tokens that will ever be available for this collection
 /// @param maxTokenRequest maximum number of tokens that can be minted at any one time
 error InvalidMaxSupply(uint256 maxSupply, uint8 maxTokenRequest);
 
-contract ERC721UserMintable is ERC721, ERC2981, AccessControl, Ownable, ReentrancyGuard {
+contract ERC721UserMintable is
+    ERC721,
+    ERC2981,
+    AccessControl,
+    Ownable,
+    ReentrancyGuard
+{
     using Address for address;
     using Counters for Counters.Counter;
     /// @dev Counter auto-incrementating NFT tokenIds, default: 0
@@ -57,7 +61,10 @@ contract ERC721UserMintable is ERC721, ERC2981, AccessControl, Ownable, Reentran
             revert NameIsEmpty();
         }
         if (maxSupply_ < maxTokenRequest_) {
-            revert InvalidMaxSupply({maxSupply: maxSupply_, maxTokenRequest: maxTokenRequest_});
+            revert InvalidMaxSupply({
+                maxSupply: maxSupply_,
+                maxTokenRequest: maxTokenRequest_
+            });
         }
         _tokenBaseURI = baseURI_;
         _maxSupply = maxSupply_;
@@ -69,7 +76,11 @@ contract ERC721UserMintable is ERC721, ERC2981, AccessControl, Ownable, Reentran
     ///#if_succeeds quantity_ <= old(maxTokenRequest());
     ///#if_succeeds totalSupply() <= old(maxSupply());
     ///#if_succeeds old(totalSupply()) + quantity_ == totalSupply();
-    function reserve(uint256 quantity_) external onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
+    function reserve(uint256 quantity_)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+        nonReentrant
+    {
         if (quantity_ > maxTokenRequest()) {
             revert MaxTokenRequestExceeded({
                 quantity: quantity_,
@@ -96,9 +107,7 @@ contract ERC721UserMintable is ERC721, ERC2981, AccessControl, Ownable, Reentran
     ///#if_succeeds msg.value >= old(price()) * quantity_;
     ///#if_succeeds old(totalSupply()) + quantity_ == totalSupply();
     function mint(uint256 quantity_) public payable nonReentrant {
-        if (!_saleIsActive) {
-            revert InactiveSale();
-        }
+        require(_saleIsActive, "Sale is not active at this time");
         if (quantity_ > maxTokenRequest()) {
             revert MaxTokenRequestExceeded({
                 quantity: quantity_,
@@ -125,7 +134,7 @@ contract ERC721UserMintable is ERC721, ERC2981, AccessControl, Ownable, Reentran
         }
         if (msg.value > totalCost) {
             uint256 toRefund = msg.value - totalCost;
-            (bool sent,) = msg.sender.call{value: toRefund}("");
+            msg.sender.call{value: toRefund}("");
         }
     }
 
@@ -178,7 +187,10 @@ contract ERC721UserMintable is ERC721, ERC2981, AccessControl, Ownable, Reentran
     }
 
     ///#if_succeeds _maxTokenRequest == maxTokenRequest_;
-    function setMaxTokenRequest(uint8 maxTokenRequest_) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setMaxTokenRequest(uint8 maxTokenRequest_)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
         _maxTokenRequest = maxTokenRequest_;
     }
 
