@@ -25,7 +25,7 @@ error MaxSupplyExceeded(uint256 quantity, uint256 maxSupply);
 /// @param sent total ether sent with transaction.
 /// @param required total ether required to purchase.
 error InsufficientFunds(uint256 sent, uint256 required);
-/// Max supply is less than max
+/// Max supply is less than maximum token request per transaction
 /// @param maxSupply maximum number of tokens that will ever be available for this collection
 /// @param maxTokenRequest maximum number of tokens that can be minted at any one time
 error InvalidMaxSupply(uint256 maxSupply, uint8 maxTokenRequest);
