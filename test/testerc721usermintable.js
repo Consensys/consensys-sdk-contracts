@@ -25,10 +25,12 @@ contract("ERC721UserMintable", async (accounts) => {
         const symbol = await instance.symbol.call();
         const maxSupply = await instance.maxSupply.call();
         const price = await instance.price.call();
+        const maxTokenRequest = await instance.maxTokenRequest.call();
         assert.equal("My Test Payable NFT", name);
         assert.equal("MTPNFT", symbol);
-        assert.equal(2, maxSupply.toNumber());
+        assert.equal(10, maxSupply.toNumber());
         assert.equal(10000000000, price.toNumber());
+        assert.equal(3, maxTokenRequest);
     });
 
     // Reserve
@@ -48,7 +50,7 @@ contract("ERC721UserMintable", async (accounts) => {
     it("should not let you reserve as caller is not owner", async () => {
         await expectRevert(
             instance.reserve(1, { from: accounts[1] }),
-            "Ownable: caller is not the owner"
+            "AccessControl: account 0x17d51cb0e82c3afa7d4c8f911de3c3836b39f894 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000"
         );
     });
 
@@ -231,7 +233,7 @@ contract("ERC721UserMintable", async (accounts) => {
         try {
             await instance.setRoyalties(constants.ZERO_ADDRESS, 100, { from: accounts[1] });
         } catch (e) {
-            assert.include(e.message, "Ownable: caller is not the owner");
+            assert.include(e.message, "AccessControl: account 0x17d51cb0e82c3afa7d4c8f911de3c3836b39f894 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000");
         }
     });
 
