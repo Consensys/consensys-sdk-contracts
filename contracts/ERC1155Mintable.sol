@@ -1,4 +1,5 @@
-pragma solidity 0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.15;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -21,7 +22,7 @@ contract ERC1155Mintable is
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     mapping(uint256 => uint256) public tokenSupply;
 
-    constructor(string calldata uri_) ERC1155(uri_) {
+    constructor(string memory uri_) ERC1155(uri_) {
         if (!(bytes(uri_).length > 1)) {
             revert TokenURIIsEmpty();
         }
@@ -44,12 +45,14 @@ contract ERC1155Mintable is
     function mintBatch(
         address to_,
         uint256[] memory ids_,
-        uint256[] memory amounts_
+        uint256[] memory quantities_
     ) public onlyRole(DEFAULT_ADMIN_ROLE) nonReentrant {
-        if (quantity_ < 1) {
-            revert QuantityIsZero();
+        for (uint256 i = 0; i < quantities_.length; i++) {
+            if (quantities_[i] < 1) {
+                revert QuantityIsZero();
+            }
         }
-        _mintBatch(to_, ids_, amounts_, "");
+        _mintBatch(to_, ids_, quantities_, "");
     }
 
     ///#if_succeeds let receiver, _ := royaltyInfo(0, 10000) in receiver == receiver_;
