@@ -73,34 +73,6 @@ contract ERC721UserMintable is
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    ///#if_succeeds quantity_ <= old(maxTokenRequest());
-    ///#if_succeeds totalSupply() <= old(maxSupply());
-    ///#if_succeeds old(totalSupply()) + quantity_ == totalSupply();
-    function reserve(uint256 quantity_)
-        external
-        onlyRole(DEFAULT_ADMIN_ROLE)
-        nonReentrant
-    {
-        if (quantity_ > maxTokenRequest()) {
-            revert MaxTokenRequestExceeded({
-                quantity: quantity_,
-                maxTokenPurchase: maxTokenRequest()
-            });
-        }
-        if (totalSupply() + quantity_ > maxSupply()) {
-            revert MaxSupplyExceeded({
-                quantity: quantity_,
-                maxSupply: maxSupply()
-            });
-        }
-
-        for (uint256 i = 0; i < quantity_; i++) {
-            uint256 tokenId = _tokenIdCounter.current();
-            _tokenIdCounter.increment();
-            _safeMint(msg.sender, tokenId);
-        }
-    }
-
     ///#if_succeeds old(_saleIsActive);
     ///#if_succeeds quantity_ <= old(maxTokenRequest());
     ///#if_succeeds totalSupply() <= old(maxSupply());
@@ -138,24 +110,32 @@ contract ERC721UserMintable is
         }
     }
 
-    function contractURI() public view returns (string memory) {
-        return _tokenBaseURI;
-    }
+    ///#if_succeeds quantity_ <= old(maxTokenRequest());
+    ///#if_succeeds totalSupply() <= old(maxSupply());
+    ///#if_succeeds old(totalSupply()) + quantity_ == totalSupply();
+    function reserve(uint256 quantity_)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+        nonReentrant
+    {
+        if (quantity_ > maxTokenRequest()) {
+            revert MaxTokenRequestExceeded({
+                quantity: quantity_,
+                maxTokenPurchase: maxTokenRequest()
+            });
+        }
+        if (totalSupply() + quantity_ > maxSupply()) {
+            revert MaxSupplyExceeded({
+                quantity: quantity_,
+                maxSupply: maxSupply()
+            });
+        }
 
-    function isSaleActive() public view returns (bool) {
-        return _saleIsActive;
-    }
-
-    function maxSupply() public view returns (uint256) {
-        return _maxSupply;
-    }
-
-    function maxTokenRequest() public view returns (uint8) {
-        return _maxTokenRequest;
-    }
-
-    function price() public view returns (uint256) {
-        return _price;
+        for (uint256 i = 0; i < quantity_; i++) {
+            uint256 tokenId = _tokenIdCounter.current();
+            _tokenIdCounter.increment();
+            _safeMint(msg.sender, tokenId);
+        }
     }
 
     ///#if_succeeds old(_isRevealed) == false;
@@ -186,6 +166,12 @@ contract ERC721UserMintable is
         _tokenBaseURI = baseURI_;
     }
 
+    ///#if_succeeds address(this).balance == 0;
+    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        uint256 balance = address(this).balance;
+        Address.sendValue(payable(msg.sender), balance);
+    }
+
     ///#if_succeeds _maxTokenRequest == maxTokenRequest_;
     function setMaxTokenRequest(uint8 maxTokenRequest_)
         external
@@ -212,14 +198,28 @@ contract ERC721UserMintable is
         _saleIsActive = !_saleIsActive;
     }
 
-    function totalSupply() public view returns (uint256) {
-        return _tokenIdCounter.current();
+    function contractURI() public view returns (string memory) {
+        return _tokenBaseURI;
     }
 
-    ///#if_succeeds address(this).balance == 0;
-    function withdraw() external onlyRole(DEFAULT_ADMIN_ROLE) {
-        uint256 balance = address(this).balance;
-        Address.sendValue(payable(msg.sender), balance);
+    function isSaleActive() public view returns (bool) {
+        return _saleIsActive;
+    }
+
+    function maxSupply() public view returns (uint256) {
+        return _maxSupply;
+    }
+
+    function maxTokenRequest() public view returns (uint8) {
+        return _maxTokenRequest;
+    }
+
+    function price() public view returns (uint256) {
+        return _price;
+    }
+
+    function totalSupply() public view returns (uint256) {
+        return _tokenIdCounter.current();
     }
 
     function _baseURI() internal view override(ERC721) returns (string memory) {
