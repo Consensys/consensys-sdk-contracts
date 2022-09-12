@@ -9,8 +9,6 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 /// Token URI of contract cannot be empty.
 error TokenURIIsEmpty();
-/// Quantity has to be one or greater.
-error QuantityIsZero();
 
 contract ERC1155Mintable is
     ERC1155,
