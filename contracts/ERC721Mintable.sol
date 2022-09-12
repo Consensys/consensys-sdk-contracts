@@ -43,6 +43,7 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
 
     /// @notice NFT minting with metadata i.e tokenURI
     /// @notice Each mint will increment the tokenId, starting from 0
+    ///#if_succeeds old(balanceOf(to_)) + 1 == balanceOf(to_);
     function mintWithTokenURI(address to_, string memory tokenURI_)
         public
         onlyRole(MINTER_ROLE)
@@ -53,11 +54,12 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
         }
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to_, tokenId);
+        _mint(to_, tokenId);
         _setTokenURI(tokenId, tokenURI_);
         return true;
     }
 
+    ///#if_succeeds let receiver, _ := royaltyInfo(0, 10000) in receiver == receiver_;
     function setRoyalties(address receiver_, uint96 feeNumerator_)
         external
         onlyRole(DEFAULT_ADMIN_ROLE)
@@ -69,6 +71,7 @@ contract ERC721Mintable is ERC721URIStorage, ERC2981, AccessControl, Ownable {
         return _contractURI;
     }
 
+    ///#if_succeeds (keccak256(abi.encodePacked((_contractURI))) == keccak256(abi.encodePacked((contractURI_))));
     function setContractURI(string memory contractURI_)
         public
         onlyRole(DEFAULT_ADMIN_ROLE)

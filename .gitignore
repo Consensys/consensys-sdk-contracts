@@ -40,3 +40,6 @@ cache/
 
 .yalc
 yalc.lock
+
+.fuzz.yml
+.db

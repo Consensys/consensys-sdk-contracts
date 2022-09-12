@@ -1,6 +1,14 @@
 {
+  "name": "infura-sdk-contracts",
+  "version": "0.1.0",
+  "description": "Infura SDK: easily manage, interact with and read smart contracts on mainnet, testnets and locally.",
+  "scripts": {
+    "test": "truffle test",
+    "prettier": "prettier --write 'contracts/**/*.sol'"
+  },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.6.0"
+    "@openzeppelin/contracts": "^4.6.0",
+    "solidity-coverage": "^0.8.0-beta.1"
   },
   "devDependencies": {
     "@openzeppelin/test-helpers": "^0.5.15",

@@ -10,4 +10,6 @@ https://consensyssoftware.atlassian.net/wiki/spaces/PS/pages/398384431173/Smart+
 
 # Template 2: Payable Mint NFT
 
+Payable mint with limited supply of tokens.
 
+https://consensyssoftware.atlassian.net/wiki/spaces/PS/pages/398392721409/Smart+contract+template+Payable+NFT
