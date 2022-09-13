@@ -50,7 +50,7 @@ contract("ERC721UserMintable", async (accounts) => {
     it("should not let you reserve as caller is not owner", async () => {
         await expectRevert(
             instance.reserve(1, { from: accounts[1] }),
-            "AccessControl: account 0x17d51cb0e82c3afa7d4c8f911de3c3836b39f894 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000"
+            `AccessControl: account ${accounts[1].toLowerCase()} is missing role 0x0000000000000000000000000000000000000000000000000000000000000000`
         );
     });
 
@@ -233,7 +233,7 @@ contract("ERC721UserMintable", async (accounts) => {
         try {
             await instance.setRoyalties(constants.ZERO_ADDRESS, 100, { from: accounts[1] });
         } catch (e) {
-            assert.include(e.message, "AccessControl: account 0x17d51cb0e82c3afa7d4c8f911de3c3836b39f894 is missing role 0x0000000000000000000000000000000000000000000000000000000000000000");
+            assert.include(e.message, `AccessControl: account ${accounts[1].toLowerCase()} is missing role 0x0000000000000000000000000000000000000000000000000000000000000000`);
         }
     });
 

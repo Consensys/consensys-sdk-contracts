@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.15;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -23,7 +23,7 @@ contract ERC1155Mintable is
     mapping (uint256 => bool) private _validIds;
 
     constructor(string memory uri_, uint256[] memory ids_) ERC1155(uri_) {
-        if (bytes(uri_).length < 1) {
+        if (!(bytes(uri_).length > 1)) {
             revert TokenURIIsEmpty();
         }
 
@@ -57,10 +57,10 @@ contract ERC1155Mintable is
  
     ///#if_succeeds let uri := uri() in uri == newUri_;
     function setURI(string memory newUri_) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        if (bytes(newUri_).length < 1) {
+        if (!(bytes(newUri_).length > 1)) {
             revert TokenURIIsEmpty();
         }
-        _setURI(newUri_);
+        _baseURI = newUri_;
     }
 
     ///#if_succeeds let receiver, _ := royaltyInfo(0, 10000) in receiver == receiver_;
