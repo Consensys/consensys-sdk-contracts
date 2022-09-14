@@ -26,11 +26,13 @@ contract("ERC721UserMintable", async (accounts) => {
         const maxSupply = await instance.maxSupply.call();
         const price = await instance.price.call();
         const maxTokenRequest = await instance.maxTokenRequest.call();
+        const contractURI = await instance.contractURI.call();
         assert.equal("My Test Payable NFT", name);
         assert.equal("MTPNFT", symbol);
         assert.equal(10, maxSupply.toNumber());
         assert.equal(10000000000, price.toNumber());
         assert.equal(3, maxTokenRequest);
+        assert.equal("", contractURI);
     });
 
     // Reserve
@@ -235,6 +237,46 @@ contract("ERC721UserMintable", async (accounts) => {
         } catch (e) {
             assert.include(e.message, `AccessControl: account ${accounts[1].toLowerCase()} is missing role 0x0000000000000000000000000000000000000000000000000000000000000000`);
         }
+    });
+
+    // Contract URI
+
+    it("should return empty string originally for contractURI", async () => {
+        const uri = await instance.contractURI();
+        assert.equal("", uri);
+    });
+
+    it("should set the current contractURI to something else", async () => {
+        const newContractURI = "myupdated_contract_uri.com/";
+        await instance.setContractURI(newContractURI);
+        const uri = await instance.contractURI();
+        assert.equal(newContractURI, uri);
+    });
+
+    it("should revert when setting contract URI to empty string", async function () {
+        await expectRevert.unspecified(
+            instance.setContractURI("")
+        );
+    });
+
+    // Base URI
+
+    it("should return empty string originally for baseURI", async () => {
+        const uri = await instance.tokenURI(0);
+        assert.equal("", uri);
+    });
+
+    it("should set the current baseURI to something else", async () => {
+        const newContractURI = "myupdated_metadata.com/";
+        await instance.setBaseURI(newContractURI);
+        const uri = await instance.tokenURI(0);
+        assert.equal(newContractURI + "0", uri);
+    });
+
+    it("should revert when setting contract URI to empty string", async function () {
+        await expectRevert.unspecified(
+            instance.setBaseURI("")
+        );
     });
 
     // View Methods

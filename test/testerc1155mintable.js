@@ -52,6 +52,29 @@ contract("ERC1155Mintable", async (accounts) => {
         }
     });
 
+    it("should batch mint new tokens", async () => {
+        const idsToMint = [0, 1, 2];
+        const quantities = [1, 2, 2];
+        const receipt = await instance.mintBatch(accounts[3], idsToMint, quantities);
+
+        const balanceOfAccount3 = await instance.balanceOf.call(accounts[3], idsToMint[0]);
+        assert.equal(quantities[0], balanceOfAccount3.toString());
+
+        const balanceOfAccount3_id1 = await instance.balanceOf.call(accounts[3], idsToMint[1]);
+        assert.equal(quantities[1], balanceOfAccount3_id1.toString());
+
+        const balanceOfAccount3_id2 = await instance.balanceOf.call(accounts[3], idsToMint[2]);
+        assert.equal(quantities[2], balanceOfAccount3_id2.toString());
+    });
+
+    it("should fail because account is not allowed to mintBatch", async () => {
+        try {
+            await instance.mintBatch(accounts[1], [0, 1], [1, 1], { from: accounts[1] });
+        } catch (e) {
+            assert.include(e.message, "is missing role");
+        }
+    });
+
     // Roles
 
     it("should grant minter role to address", async () => {
@@ -221,6 +244,21 @@ contract("ERC1155Mintable", async (accounts) => {
         } catch (e) {
             assert.include(e.message, "is missing role");
         }
+    });
+
+    // AddIDs
+
+    it("should revert because ID doesn't exist", async () => {
+        await expectRevert(
+            instance.uri(99),
+            "URI requested for invalid Token ID"
+        );
+    });
+
+    it("should add id", async () => {
+        await instance.addIds([99]);
+        const uri = await instance.uri(99);
+        assert.equal(uri, "myupdated_metadata.com/99.json");
     });
 
     // View Methods

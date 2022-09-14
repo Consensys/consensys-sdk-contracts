@@ -13,6 +13,8 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 error NameIsEmpty();
 /// Base URI of tokens to be minted cannot be empty.
 error BaseURIIsEmpty();
+/// Contract URI of tokens to be minted cannot be empty.
+error ContractURIIsEmpty();
 /// Too many tokens requested: `quantity` requested but maximum allowed is `maxTokenPurchase`.
 /// @param quantity requested amount.
 /// @param maxTokenPurchase maximum amount available per transaction.
@@ -48,11 +50,13 @@ contract ERC721UserMintable is
     uint256 private immutable _maxSupply;
     uint256 private _price;
     string private _tokenBaseURI;
+    string private _contractURI;
 
     constructor(
         string memory name_,
         string memory symbol_,
         string memory baseURI_,
+        string memory contractURI_,
         uint256 maxSupply_,
         uint256 price_,
         uint8 maxTokenRequest_
@@ -66,6 +70,7 @@ contract ERC721UserMintable is
                 maxTokenRequest: maxTokenRequest_
             });
         }
+        _contractURI = contractURI_;
         _tokenBaseURI = baseURI_;
         _maxSupply = maxSupply_;
         _maxTokenRequest = maxTokenRequest_;
@@ -139,7 +144,7 @@ contract ERC721UserMintable is
     }
 
     function contractURI() public view returns (string memory) {
-        return _tokenBaseURI;
+        return _contractURI;
     }
 
     function isSaleActive() public view returns (bool) {
@@ -172,6 +177,18 @@ contract ERC721UserMintable is
         }
         _tokenBaseURI = baseURI_;
         _isRevealed = true;
+    }
+
+    ///#if_succeeds (keccak256(abi.encodePacked((_contractURI))) != keccak256(abi.encodePacked((""))));
+    ///#if_succeeds (keccak256(abi.encodePacked((_contractURI))) == keccak256(abi.encodePacked((contractURI_))));
+    function setContractURI(string memory contractURI_)
+        external
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        if (!(bytes(contractURI_).length > 1)) {
+            revert ContractURIIsEmpty();
+        }
+        _contractURI = contractURI_;
     }
 
     ///#if_succeeds (keccak256(abi.encodePacked((_tokenBaseURI))) != keccak256(abi.encodePacked((""))));
