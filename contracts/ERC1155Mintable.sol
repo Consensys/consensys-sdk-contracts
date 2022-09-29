@@ -36,6 +36,7 @@ contract ERC1155Mintable is ERC1155, ERC2981, AccessControl, Ownable {
         addIds(ids_);
     }
 
+    ///#if_succeeds old(balanceOf(to_, id_)) + quantity_ == balanceOf(to_, id_);
     function mint(
         address to_,
         uint256 id_,
@@ -44,6 +45,7 @@ contract ERC1155Mintable is ERC1155, ERC2981, AccessControl, Ownable {
         _mint(to_, id_, quantity_, "");
     }
 
+    ///#if_succeeds old(balanceOf(to_, ids_[0])) + quantities_[0] == balanceOf(to_, ids_[0]);
     function mintBatch(
         address to_,
         uint256[] memory ids_,
@@ -58,7 +60,8 @@ contract ERC1155Mintable is ERC1155, ERC2981, AccessControl, Ownable {
         }
     }
 
-    ///#if_succeeds let uri := uri() in uri == newUri_;
+    ///#if_succeeds (keccak256(abi.encodePacked((_baseURI))) != keccak256(abi.encodePacked((""))));
+    ///#if_succeeds (keccak256(abi.encodePacked((_baseURI))) == keccak256(abi.encodePacked((newUri_))));
     function setURI(string memory newUri_) public onlyRole(DEFAULT_ADMIN_ROLE) {
         if (!(bytes(newUri_).length > 1)) {
             revert BaseURIIsEmpty();
@@ -104,8 +107,6 @@ contract ERC1155Mintable is ERC1155, ERC2981, AccessControl, Ownable {
                 )
                 : _baseURI;
     }
-
-    // Overrides
 
     function supportsInterface(bytes4 interfaceId_)
         public

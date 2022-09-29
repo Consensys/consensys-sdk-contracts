@@ -105,21 +105,6 @@ contract("ERC1155Mintable", async (accounts) => {
         assert.equal(false, hasRoleAfter);
     });
 
-    it("should renounce ownership", async () => {
-        const receipt = await instance.renounceOwnership({ from: accounts[0] });
-        expectEvent(receipt, 'OwnershipTransferred', {
-            previousOwner: accounts[0],
-            newOwner: constants.ZERO_ADDRESS,
-        })
-    });
-
-    it("should fail to renounce ownership as caller is not the owner", async () => {
-        await expectRevert(
-            instance.renounceOwnership({ from: accounts[1] }),
-            "Ownable: caller is not the owner"
-        );
-    });
-
     it("should revoke role from address", async () => {
         const hasRoleInitially = await instance.hasRole(roleMinter, accounts[2]);
         assert.equal(false, hasRoleInitially);
@@ -281,5 +266,62 @@ contract("ERC1155Mintable", async (accounts) => {
     it("should return true as is approved for all", async () => {
         const response = await instance.isApprovedForAll(accounts[2], accounts[1]);
         assert.equal(true, response);
+    });
+
+    // Ownership
+
+    it("should transfer ownership", async () => {
+        const receipt = await instance.transferOwnership(accounts[1], { from: accounts[0] });
+        expectEvent(receipt, 'OwnershipTransferred', {
+            previousOwner: accounts[0],
+            newOwner: accounts[1],
+        });
+    });
+
+    it("should fail to transfer ownership as caller is not the owner", async () => {
+        await expectRevert(
+            instance.transferOwnership(accounts[1], { from: accounts[0] }),
+            "Ownable: caller is not the owner"
+        );
+    });
+
+    it("should renounce ownership", async () => {
+        const receipt = await instance.renounceOwnership({ from: accounts[1] });
+        expectEvent(receipt, 'OwnershipTransferred', {
+            previousOwner: accounts[1],
+            newOwner: constants.ZERO_ADDRESS,
+        });
+    });
+
+    it("should fail to renounce ownership as caller is not the owner", async () => {
+        await expectRevert(
+            instance.renounceOwnership({ from: accounts[1] }),
+            "Ownable: caller is not the owner"
+        );
+    });
+
+    // safeBatchTransferFrom
+
+    it("should safe batch transfer tokens", async () => {
+        const receipt = await instance.safeBatchTransferFrom(accounts[3], accounts[2], [0, 1], [1,1], [], { from: accounts[3] });
+        const balanceOfAccount3 = await instance.balanceOf.call(accounts[2], 0);
+        assert.equal(2, balanceOfAccount3.toString());
+
+        const balanceOfAccount3_id1 = await instance.balanceOf.call(accounts[2], 1);
+        assert.equal(1, balanceOfAccount3_id1.toString());
+    });
+
+    it("should revert because address safeTransferring is not owner", async () => {
+        await expectRevert(
+            instance.safeBatchTransferFrom(accounts[2], accounts[1], [0], [1], [], { from: accounts[0] }),
+            "ERC1155: transfer caller is not owner nor approved"
+        )
+    });
+
+    it("should revert because cannot safeTransfer to the zero address", async () => {
+        await expectRevert(
+            instance.safeBatchTransferFrom(accounts[2], constants.ZERO_ADDRESS, [0], [1], [], { from: accounts[2] }),
+            "ERC1155: transfer to the zero address"
+        )
     });
 });
