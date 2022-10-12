@@ -55,7 +55,8 @@ contract ERC1155Mintable is ERC1155, ERC2981, AccessControl, Ownable {
     }
 
     function addIds(uint256[] memory ids_) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        for (uint256 i = 0; i < ids_.length; i++) {
+        uint256 length = ids_.length;
+        for (uint256 i = 0; i < length; i++) {
             _validIds[ids_[i]] = true;
         }
     }
