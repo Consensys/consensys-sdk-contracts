@@ -223,19 +223,19 @@
         319
       ],
       "Context": [
-        2226
+        3627
       ],
       "ERC165": [
-        2527
+        3928
       ],
       "IAccessControl": [
         392
       ],
       "IERC165": [
-        2539
+        3940
       ],
       "Strings": [
-        2503
+        3904
       ]
     },
     "id": 320,
@@ -272,7 +272,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 320,
-        "sourceUnit": 2227,
+        "sourceUnit": 3628,
         "src": "164:30:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -284,7 +284,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 320,
-        "sourceUnit": 2504,
+        "sourceUnit": 3905,
         "src": "195:30:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -296,7 +296,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 320,
-        "sourceUnit": 2528,
+        "sourceUnit": 3929,
         "src": "226:43:0",
         "symbolAliases": [],
         "unitAlias": ""
@@ -309,7 +309,7 @@
               "id": 7,
               "name": "Context",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 2226,
+              "referencedDeclaration": 3627,
               "src": "1841:7:0"
             },
             "id": 8,
@@ -333,7 +333,7 @@
               "id": 11,
               "name": "ERC165",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 2527,
+              "referencedDeclaration": 3928,
               "src": "1866:6:0"
             },
             "id": 12,
@@ -354,10 +354,10 @@
         "id": 319,
         "linearizedBaseContracts": [
           319,
-          2527,
-          2539,
+          3928,
+          3940,
           392,
-          2226
+          3627
         ],
         "name": "AccessControl",
         "nameLocation": "1824:13:0",
@@ -664,7 +664,7 @@
           },
           {
             "baseFunctions": [
-              2526
+              3927
             ],
             "body": {
               "id": 59,
@@ -817,7 +817,7 @@
                         "lValueRequested": false,
                         "memberName": "supportsInterface",
                         "nodeType": "MemberAccess",
-                        "referencedDeclaration": 2526,
+                        "referencedDeclaration": 3927,
                         "src": "2765:23:0",
                         "typeDescriptions": {
                           "typeIdentifier": "t_function_internal_view$_t_bytes4_$returns$_t_bool_$",
@@ -1191,7 +1191,7 @@
                           "name": "_msgSender",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 2216,
+                          "referencedDeclaration": 3617,
                           "src": "3417:10:0",
                           "typeDescriptions": {
                             "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
@@ -1527,10 +1527,10 @@
                                           "name": "Strings",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 2503,
+                                          "referencedDeclaration": 3904,
                                           "src": "3989:7:0",
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_type$_t_contract$_Strings_$2503_$",
+                                            "typeIdentifier": "t_type$_t_contract$_Strings_$3904_$",
                                             "typeString": "type(library Strings)"
                                           }
                                         },
@@ -1541,7 +1541,7 @@
                                         "lValueRequested": false,
                                         "memberName": "toHexString",
                                         "nodeType": "MemberAccess",
-                                        "referencedDeclaration": 2502,
+                                        "referencedDeclaration": 3903,
                                         "src": "3989:19:0",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_string_memory_ptr_$",
@@ -1670,10 +1670,10 @@
                                           "name": "Strings",
                                           "nodeType": "Identifier",
                                           "overloadedDeclarations": [],
-                                          "referencedDeclaration": 2503,
+                                          "referencedDeclaration": 3904,
                                           "src": "4101:7:0",
                                           "typeDescriptions": {
-                                            "typeIdentifier": "t_type$_t_contract$_Strings_$2503_$",
+                                            "typeIdentifier": "t_type$_t_contract$_Strings_$3904_$",
                                             "typeString": "type(library Strings)"
                                           }
                                         },
@@ -1684,7 +1684,7 @@
                                         "lValueRequested": false,
                                         "memberName": "toHexString",
                                         "nodeType": "MemberAccess",
-                                        "referencedDeclaration": 2502,
+                                        "referencedDeclaration": 3903,
                                         "src": "4101:19:0",
                                         "typeDescriptions": {
                                           "typeIdentifier": "t_function_internal_pure$_t_uint256_$_t_uint256_$returns$_t_string_memory_ptr_$",
@@ -2624,7 +2624,7 @@
                             "name": "_msgSender",
                             "nodeType": "Identifier",
                             "overloadedDeclarations": [],
-                            "referencedDeclaration": 2216,
+                            "referencedDeclaration": 3617,
                             "src": "5893:10:0",
                             "typeDescriptions": {
                               "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
@@ -3630,7 +3630,7 @@
                                 "name": "_msgSender",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 2216,
+                                "referencedDeclaration": 3617,
                                 "src": "7447:10:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
@@ -4016,7 +4016,7 @@
                                 "name": "_msgSender",
                                 "nodeType": "Identifier",
                                 "overloadedDeclarations": [],
-                                "referencedDeclaration": 2216,
+                                "referencedDeclaration": 3617,
                                 "src": "7806:10:0",
                                 "typeDescriptions": {
                                   "typeIdentifier": "t_function_internal_view$__$returns$_t_address_$",
@@ -4190,7 +4190,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-09-06T13:59:55.933Z",
+  "updatedAt": "2022-11-02T11:55:39.205Z",
   "devdoc": {
     "details": "Contract module that allows children to implement role-based access control mechanisms. This is a lightweight version that doesn't allow enumerating role members except through off-chain means by accessing the contract event logs. Some applications may benefit from on-chain enumerability, for those cases see {AccessControlEnumerable}. Roles are referred to by their `bytes32` identifier. These should be exposed in the external API and be unique. The best way to achieve this is by using `public constant` hash digests: ``` bytes32 public constant MY_ROLE = keccak256(\"MY_ROLE\"); ``` Roles can be used to represent a set of permissions. To restrict access to a function call, use {hasRole}: ``` function foo() public {     require(hasRole(MY_ROLE, msg.sender));     ... } ``` Roles can be granted and revoked dynamically via the {grantRole} and {revokeRole} functions. Each role has an associated admin role, and only accounts that have a role's admin role can call {grantRole} and {revokeRole}. By default, the admin role for all roles is `DEFAULT_ADMIN_ROLE`, which means that only accounts with this role will be able to grant or revoke other roles. More complex role relationships can be created by using {_setRoleAdmin}. WARNING: The `DEFAULT_ADMIN_ROLE` is also its own admin: it has permission to grant and revoke this role. Extra precautions should be taken to secure accounts that have been granted it.",
     "kind": "dev",
@@ -4229,7 +4229,7 @@
       "id": "0x2cdc5c5f756f555319272af6740217ecb0d9451b44e748689b42eb518eb5ef1b"
     },
     "contract": {
-      "id": "0xc1ea9c2ef7b8e1294ba5f0f4d04089f05b11c0ee33c2b79cacd690ae3521773a"
+      "id": "0xf4637e32eeecc19071884beee02c35e9764283d41bbfe9101b7bcee1b302ea5f"
     }
   }
 }

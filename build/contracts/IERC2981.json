@@ -64,7 +64,7 @@
     "absolutePath": "@openzeppelin/contracts/interfaces/IERC2981.sol",
     "exportedSymbols": {
       "IERC165": [
-        2539
+        3940
       ],
       "IERC2981": [
         516
@@ -92,7 +92,7 @@
         "nameLocation": "-1:-1:-1",
         "nodeType": "ImportDirective",
         "scope": 517,
-        "sourceUnit": 2540,
+        "sourceUnit": 3941,
         "src": "132:44:3",
         "symbolAliases": [],
         "unitAlias": ""
@@ -105,7 +105,7 @@
               "id": 502,
               "name": "IERC165",
               "nodeType": "IdentifierPath",
-              "referencedDeclaration": 2539,
+              "referencedDeclaration": 3940,
               "src": "490:7:3"
             },
             "id": 503,
@@ -126,7 +126,7 @@
         "id": 516,
         "linearizedBaseContracts": [
           516,
-          2539
+          3940
         ],
         "name": "IERC2981",
         "nameLocation": "478:8:3",
@@ -290,7 +290,7 @@
   },
   "networks": {},
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-09-06T13:59:55.936Z",
+  "updatedAt": "2022-11-02T11:55:39.208Z",
   "devdoc": {
     "details": "Interface for the NFT Royalty Standard. A standardized way to retrieve royalty payment information for non-fungible tokens (NFTs) to enable universal support for royalty payments across all NFT marketplaces and ecosystem participants. _Available since v4.5._",
     "kind": "dev",
@@ -317,7 +317,7 @@
       "id": "0x2cdc5c5f756f555319272af6740217ecb0d9451b44e748689b42eb518eb5ef1b"
     },
     "contract": {
-      "id": "0x92fcb4fcc0463bba44f38d6cc4638dbad1218b62ebfa0d2fc720ec53c11369bc"
+      "id": "0x864ab4d83ff269f9f93955d65d2bae50c6414761a3b9e8487dcae335612cd89d"
     }
   }
 }
